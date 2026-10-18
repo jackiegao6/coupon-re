@@ -1,0 +1,11 @@
+{
+  "graphs": [{"name": "my-network", "format": "edge-list", "path": "../data/network.txt", "directed": true}],
+  "scenarios": ["balanced-reference"],
+  "budgets": [100],
+  "theta_factors": [1, 4, 16, 64],
+  "methods": ["CIM-RIS", "Forward-CELF", "Random", "Degree", "PageRank", "Alpha", "1Hop"],
+  "repeats": 1,
+  "evaluation_trials": 5000,
+  "forward_batches": 256,
+  "seed": 42
+}

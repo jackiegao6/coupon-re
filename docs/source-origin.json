@@ -1,0 +1,12 @@
+{
+  "note": "Source hashes identify the original internal implementation; this repository runs independently of those files.",
+  "original_files_sha256": {
+    "experiments/uniform_ssr.py": "a1d7dd642032e3f5bad16fda65fe8a8e5d0350d1c1ac64200d83e7bd4f051f76",
+    "experiments/streaming_ssr.py": "87bf48c7d71e007b8c0e1e0a68f1470ba75d963e53b7db6e64ea2980f4bd25b2",
+    "experiments/run_real_submission.py": "8d8c1c84789e14864d644d0bb17d33b12b3ab5b61e6a62584e448879066e8a8f",
+    "experiments/forward_coverage_baselines.py": "54c96636a281d7be902bf355357648a3f00829f12c2f12ee42f9978a9cb50531",
+    "experiments/figure3_extension_kernel.cpp": "cb5a8e16ccadc41b8338251a99bd58ca1b97c55caf271ffdfef27cef70d310be",
+    "experiments/streaming_ssr_kernel.cpp": "182e8387e102dcbffa4843a8a51dbc2300a62126c0473e614d9736143f563602",
+    "experiments/verify_uniform_ssr.py": "db4313a31e45923f7dacfcf68a3ffd8120a673128e1def845b54373cb179f3c2"
+  }
+}

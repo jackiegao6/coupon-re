@@ -1,0 +1,11 @@
+{
+  "graphs": [{"name": "synthetic-smoke", "format": "synthetic", "n": 24}],
+  "scenarios": ["balanced-reference"],
+  "budgets": [5],
+  "theta_factors": [4],
+  "methods": ["CIM-RIS", "Forward-CELF", "Random", "Degree", "PageRank", "Alpha", "1Hop"],
+  "repeats": 1,
+  "evaluation_trials": 500,
+  "forward_batches": 32,
+  "seed": 42
+}

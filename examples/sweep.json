@@ -1,0 +1,11 @@
+{
+  "graphs": [{"name": "synthetic-sweep", "format": "synthetic", "n": 40}],
+  "scenarios": ["balanced-reference", "adoption-heavy", "forwarding-heavy"],
+  "budgets": [5, 10],
+  "theta_factors": [1, 4, 16],
+  "methods": ["CIM-RIS", "Forward-CELF", "Random"],
+  "repeats": 2,
+  "evaluation_trials": 500,
+  "forward_batches": 64,
+  "seed": 42
+}

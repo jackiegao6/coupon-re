@@ -1,0 +1,19 @@
+name: Verify algorithms and runnable examples
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: sudo apt-get update && sudo apt-get install -y g++
+      - run: python -m pip install .
+      - run: python -m unittest discover -s tests -v
+        env:
+          COUPONIM_TEST_CPP: '1'
+      - run: python -m couponim demo --backend cpp --workers 2 --output results/ci-demo
