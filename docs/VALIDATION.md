@@ -1,34 +1,50 @@
 # Local validation record
 
-Validated on 2026-10-18 using Windows, CPython 3.12.8, NumPy 2.2.4,
-psutil 7.0.0, setuptools 78.1.0, and MinGW-w64 GCC 14.2.0.
-
-The final core sources were copied to a separate directory for verification.
-No manuscript files, benchmark datasets, result archives, or plotting scripts
-were available in that copy.
+Version 0.2.0 was validated on 2026-10-18 using Windows, CPython 3.12,
+NumPy 2.2.4, psutil 7.0.0 and MinGW-w64 GCC 14.2.0.
 
 Completed checks:
 
-1. **14 unittest cases passed**, with native tests enabled. These include exhaustive
-   forward/reverse equivalence; cached actions across branches; retained empty
-   samples; unique seeds; the sufficient-budget calculation; full-bank/streaming
-   equivalence; CELF/plain-greedy equivalence; graph input validation; behavior
-   parameters; parallel orchestration; resume; and protocol mismatch rejection.
-2. **12 native/Python streaming comparisons passed**: six generated fixtures and
-   two root/component seed configurations. Choices, marginal gains, coverage
-   counts, and RR counters agree exactly.
-3. **Six forward-bank/evaluation comparisons passed**. Python and C++ trajectory
-   arrays agree exactly; independently evaluated statistics agree to 1e-13.
-4. **The complete seven-method demo passed on both backends** with two job workers.
-   All selected seeds match; spread, redeemed coupons, evaluation variance, and
-   confidence halfwidth agree to 1e-12.
-5. **The wheel built and installed successfully**. Native sources are present in
-   the installed package. Running the C++ demo from outside the source checkout
-   also completed all seven jobs.
-6. **Upload-content inspection passed**: no datasets, plots, native executables,
-   machine-specific absolute paths, or old experiment result files are included.
+1. **24 unittest cases passed with native tests enabled.** Coverage includes
+   forward/reverse event equivalence, shared cached actions, empty samples,
+   distinct seeds, budget calculations, CELF versus direct greedy, streaming
+   versus materialized samples, all method interfaces, custom parameter
+   validity, matrix limits, edge-list conversion, all generated example
+   configurations, exact visited-set DP on cycles, adaptive sample prefixes,
+   fixed-assignment sampler estimates, isolated workers, resume and STOP.
+2. **12 native/Python streaming comparisons passed**, using six generated
+   fixtures and two stream configurations. Selections, marginal gains,
+   coverage and sampler counters agree exactly.
+3. **Six native/Python forward-bank and evaluation comparisons passed**.
+   Trajectory arrays agree exactly; evaluation statistics agree to 1e-13.
+4. **Six native/Python row-major full-bank comparisons passed**, including
+   selections, marginal counts and training estimates. Each full-bank prefix
+   was replayed and extended by one additional component, matching a separately
+   constructed Python reference.
+5. **All 15 methods completed end to end on both backend configurations**,
+   with two workers and a runtime-generated eight-node graph.
+   Python-only selection methods remain Python under the C++ configuration;
+   their independent forward evaluations use the native evaluator.
+6. **The wheel built and installed into an isolated temporary directory.**
+   From outside the source checkout, the installed package compiled its native
+   sources, completed all 15 jobs, re-evaluated their saved seeds in parallel,
+   and ran graph inspection, exact diagnosis and sampler ablation commands.
+   The wheel contains the new package modules and C++ sources; the historical
+   reference archive is not installed as executable package code.
+7. **Source-content inspection:** no concrete datasets, plotting imports,
+   figure assets, compiled binaries or measured-result archives are included.
+   The 71 historical source snapshots retain original path dependencies and
+   are documented as reference-only. Their hashes are in source-inventory.json.
 
-The independent tests demonstrate implementation consistency and a runnable
-workflow. They do not constitute large-network performance results or numerical
-reproduction of the manuscript's figures. Linux/macOS execution and the GitHub
-Actions workflow have not been run locally.
+The heterogeneity example was corrected during validation: permuting a
+sink-specific high consumption probability onto a non-sink could violate the
+probability constraints. Its generated graph now has variable out-degrees and
+no sinks. Validation continues to reject invalid parameters without silently
+clipping them.
+
+These checks validate implementation consistency and executable workflows.
+They do not reproduce the manuscript's large-network performance results.
+The optional SciPy MAT converter was not separately exercised; edge-list to
+CSR NPZ conversion was tested. Linux/macOS execution and the GitHub Actions
+workflow were not run locally. Historical scripts were inventoried and copied,
+not exhaustively executed.

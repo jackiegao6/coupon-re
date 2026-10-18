@@ -1,0 +1,34 @@
+{
+  "graphs": [
+    {
+      "name": "generated-example",
+      "format": "synthetic",
+      "n": 12
+    }
+  ],
+  "scenarios": [
+    "balanced-reference"
+  ],
+  "budgets": [
+    3
+  ],
+  "theta_factors": [
+    4
+  ],
+  "methods": [
+    "CIM-Adaptive",
+    "CIM-Conditioned",
+    "CIM-RIS"
+  ],
+  "repeats": 1,
+  "evaluation_trials": 500,
+  "forward_batches": 64,
+  "seed": 42,
+  "algorithm_options": {
+    "adaptive_initial_samples": 24,
+    "adaptive_minimum_samples": 48,
+    "adaptive_maximum_samples": 192,
+    "adaptive_validation_trials": 100,
+    "adaptive_tolerance_percent": 0.5
+  }
+}

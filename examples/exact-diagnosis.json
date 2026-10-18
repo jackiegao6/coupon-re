@@ -1,0 +1,29 @@
+{
+  "graphs": [
+    {
+      "format": "synthetic",
+      "name": "generated-eight",
+      "n": 8
+    }
+  ],
+  "scenarios": [
+    "balanced-reference"
+  ],
+  "budgets": [
+    1,
+    2,
+    4
+  ],
+  "theta_factors": [
+    4
+  ],
+  "methods": [
+    "CIM-RIS",
+    "Forward-CELF",
+    "Random"
+  ],
+  "repeats": 1,
+  "evaluation_trials": 500,
+  "forward_batches": 64,
+  "seed": 42
+}

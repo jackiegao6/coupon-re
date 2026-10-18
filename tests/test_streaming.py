@@ -8,7 +8,7 @@ import numpy as np
 
 from couponim import native
 from couponim.forward import sample_coverage, select_coverage
-from couponim.rr import CouponRR, SSRBank
+from couponim.rr import CouponRR, SSRBank, sample_ssr
 from couponim.simulation import evaluate
 from couponim.streaming import stream_ssr_greedy
 from tests.test_rr import fixtures
@@ -105,3 +105,40 @@ class NativeTests(unittest.TestCase):
                 np.testing.assert_allclose(
                     [actual["spread"], actual["within_run_ci95_halfwidth"],
                      actual["evaluation_variance"], actual["consumed_coupons"]], expected, atol=1e-13, rtol=0)
+
+
+    def test_native_row_major_bank_and_checked_extension(self):
+        for graph, alpha, discard, weights in fixtures():
+            with self.subTest(graph=graph.name):
+                model = native.NativeModel(graph, alpha, discard, self.build_dir, self.root/(graph.name+"-bank"))
+                native.write_graph(model.graphfile, CouponRR(graph, alpha, discard, weights))
+                oldk, theta, seed = max(1, graph.n-1), 83, 19
+                sampler = CouponRR(graph, alpha, discard, weights)
+                bank = sample_ssr(sampler, oldk, theta, seed)
+                expected, info = bank.greedy()
+                actual, result = model.bank(oldk, theta, seed)
+                self.assertEqual(actual, expected)
+                self.assertEqual(result["selected_marginal_counts"], info["selected_marginal_counts"])
+                self.assertEqual(result["training_estimate_not_quality"], info["training_estimate_not_quality"])
+                if oldk < graph.n:
+                    # Replay old row-major RNG and independently form one more component.
+                    rng = random.Random(seed)
+                    roots, covered = [], set()
+                    for row in range(theta):
+                        root = rng.randrange(graph.n)
+                        roots.append(root)
+                        for j in range(oldk):
+                            if expected[j] in sampler.sample(root, rng):
+                                covered.add(row)
+                    extra = random.Random(87)
+                    gains = [0]*graph.n
+                    for row, root in enumerate(roots):
+                        rr = sampler.sample(root, extra)
+                        if row not in covered:
+                            for v in rr:
+                                gains[v] += 1
+                    best = min((v for v in range(graph.n) if v not in expected),
+                               key=lambda v: (-gains[v], v))
+                    extended, detail = model.extend_bank_prefix(theta, seed, expected, [87])
+                    self.assertEqual(extended, expected+[best])
+                    self.assertTrue(detail["prefix_reproduced"])

@@ -82,3 +82,11 @@ weighted intervals, branch merging, cyclic walks, exact full-bank/streaming choi
 and Python/native forward evaluation. The native bridge currently requires
 little-endian CPython hosts. Windows native compilation and execution are tested
 locally; POSIX memory handling is implemented but should be tested on its target host.
+
+## Additional implementations
+
+The runnable package also includes row-major full-bank SRR, conditioned sampling,
+an empirical adaptive sampler and additional baselines. Their interfaces, RNG
+differences and model boundaries are in [CATALOG.md](CATALOG.md). Historical
+implementations in `legacy/` are reference snapshots, not part of this model
+consistency claim.

@@ -17,3 +17,4 @@ jobs:
         env:
           COUPONIM_TEST_CPP: '1'
       - run: python -m couponim demo --backend cpp --workers 2 --output results/ci-demo
+      - run: python -m couponim run --config examples/all-methods.json --backend cpp --workers 2 --output results/ci-all-methods

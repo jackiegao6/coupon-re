@@ -1,0 +1,30 @@
+{
+  "graphs": [
+    {
+      "name": "generated-example",
+      "format": "synthetic",
+      "n": 12
+    }
+  ],
+  "scenarios": [
+    "balanced-reference",
+    "balanced",
+    "adoption-heavy",
+    "forwarding-heavy"
+  ],
+  "budgets": [
+    3
+  ],
+  "theta_factors": [
+    4
+  ],
+  "methods": [
+    "CIM-RIS",
+    "Forward-CELF",
+    "Random"
+  ],
+  "repeats": 1,
+  "evaluation_trials": 500,
+  "forward_batches": 64,
+  "seed": 42
+}

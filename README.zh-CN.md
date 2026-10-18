@@ -66,3 +66,37 @@ python -m unittest discover -s tests -v
 Python 流式算法和 C++ 流式算法在相同随机流下的结果。
 
 完整接口、复杂度、实验配置与结果字段见英文 README 和 `docs/`。
+
+## 完整实验目录（本次扩充）
+
+现在不只提供最小示例，统一入口支持 **15 种选种方法**。可以先运行完整的小图检查：
+
+```sh
+python -m couponim methods
+python -m couponim run --config examples/all-methods.json --backend cpp --workers 2 --output results/all-methods
+```
+
+- `couponim/`：可直接运行的算法、原生加速、参数生成、评估、诊断和调度。
+- `examples/`：预算、环境、异质性、参数网格、采样量、算法稳定性和规模实验配置。
+- `legacy/experiments/`：原实验驱动、核心实现、验证和审计源码快照。
+- `legacy/gzc-impl/`：较早的模拟、选种、概率分布和矩阵处理代码。
+- `docs/CATALOG.md`：所有功能、命令与原脚本之间的对应关系。
+- `docs/source-inventory.json`：103 份原源码的迁入／排除清单及哈希。
+
+**新实验使用 `couponim` 入口。** `legacy/` 中的 71 份文件是参考归档，保留原目录依赖，
+并不承诺直接执行；早期模型与当前模型的差别也在归档说明中列出。归档没有进入安装包。
+
+新增的条件采样、自适应采样、IC-RIS 等选种仍使用 Python。指定 `--backend cpp`
+会对已有原生实现的采样和评估加速，结果中明确记录实际使用的后端。
+MC-Greedy 和精确诊断有显式规模限制；自适应停止是经验规则，不代表理论证书。
+
+以下命令分别用于采样器比较、小图精确检查，以及只重评估已保存的种子：
+
+```sh
+python -m couponim sampler-ablation --config examples/sampler-ablation.json --output results/ablation
+python -m couponim diagnose --config examples/exact-diagnosis.json --output results/exact
+python -m couponim reevaluate --source results/all-methods --output results/evaluation-5000 --trials 5000 --backend cpp --workers 2
+```
+
+详细配置说明见 [扩充参数说明](docs/EXTENDED_CONFIG.md)。所有示例图都在运行时生成；
+没有迁入具体数据集、画图程序、预测／手工修改结果或历史结果文件。

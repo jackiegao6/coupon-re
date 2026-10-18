@@ -11,11 +11,12 @@ per selected seed. By default there are 5,000 independent trials per selected se
 | `graphs` | List of graph specifications; names must be unique |
 | `scenarios` | Behavior settings applied identically to every method |
 | `budgets` | Positive k values, at most the graph's node count |
-| `theta_factors` | Positive integer multipliers f, with theta = f*n, for CIM-RIS |
-| `methods` | Methods to execute; listed in the main README |
+| `theta_factors` | Positive integer multipliers f, with theta = f*n, for uniform/conditioned SRR and IC-RIS |
+| `methods` | Methods to execute; listed in CATALOG.md |
 | `repeats` | Independent selection/evaluation repetitions per configuration |
 | `evaluation_trials` | Forward campaigns for each selected set |
-| `forward_batches` | Forward trajectories per source for Forward-CELF |
+| `forward_batches` | Forward trajectories per source for forward and MC-matrix methods |
+| `algorithm_options` | Optional method settings; see EXTENDED_CONFIG.md |
 | `seed` | Master seed for deterministic, domain-separated stream derivation |
 
 Forward-CELF uses one fixed empirical coverage bank over `(batch, consumer)` pairs.
@@ -99,3 +100,7 @@ existing core. It does not include old plotting pipelines, result modifications,
 or automatic downloads. Source-only tests generate their own small graphs.
 Reproducing a specific paper figure additionally requires the original graph,
 exact protocol, and seeds for that figure.
+
+The full method catalog, configuration examples, backend boundaries and historical
+source mapping are documented in [CATALOG.md](CATALOG.md). Custom probability
+models and new commands are documented in [EXTENDED_CONFIG.md](EXTENDED_CONFIG.md).

@@ -17,16 +17,12 @@ import numpy as np
 import psutil
 
 from . import __version__, native
-from .forward import sample_coverage, select_coverage
 from .graph import load_graph
-from .heuristics import pagerank_order
 from .parameters import node_probabilities
-from .rr import CouponRR
 from .simulation import evaluate
-from .streaming import stream_ssr_greedy
 
 PACKAGE = Path(__file__).resolve().parent
-METHODS = ("CIM-RIS", "Forward-CELF", "Random", "Degree", "PageRank", "Alpha", "1Hop")
+from .selection import METHODS, FACTOR_METHODS, NATIVE_METHODS, choose_static, select, validate_options
 
 
 def now():
@@ -67,17 +63,24 @@ def prepare(config_path, output, backend, build_dir):
     path = Path(config_path).resolve()
     spec = read(path)
     allowed = {"graphs", "scenarios", "budgets", "theta_factors", "methods", "repeats",
-               "evaluation_trials", "forward_batches", "seed"}
+               "evaluation_trials", "forward_batches", "seed", "algorithm_options"}
     if set(spec) - allowed:
         raise ValueError(f"Unknown config keys: {set(spec) - allowed}")
     spec = {"scenarios": ["balanced-reference"], "budgets": [5], "theta_factors": [8],
             "methods": ["CIM-RIS", "Forward-CELF", "Random"], "repeats": 1,
-            "evaluation_trials": 5000, "forward_batches": 256, "seed": 42, **spec}
+            "evaluation_trials": 5000, "forward_batches": 256, "seed": 42, "algorithm_options": {}, **spec}
     for key in ("repeats", "evaluation_trials", "forward_batches"):
         positive_int(spec[key], key)
     if not isinstance(spec["seed"], int) or isinstance(spec["seed"], bool):
         raise ValueError("seed must be an integer")
-    for key in ("budgets", "theta_factors", "methods", "scenarios"):
+    validate_options(spec["algorithm_options"])
+    scenarios = spec["scenarios"]
+    if not isinstance(scenarios, list) or not scenarios:
+        raise ValueError("scenarios must be a nonempty list")
+    names = [v.get("name") if isinstance(v, dict) else v for v in scenarios]
+    if any(not isinstance(v, str) or not v for v in names) or len(set(names)) != len(names):
+        raise ValueError("Scenarios must have distinct nonempty names")
+    for key in ("budgets", "theta_factors", "methods"):
         values = spec[key]
         if not isinstance(values, list) or not values or len(values) != len(set(values)):
             raise ValueError(f"{key} must be a nonempty list of distinct values")
@@ -118,9 +121,11 @@ def prepare(config_path, output, backend, build_dir):
     jobs = []
     for graph, scenario, k, method, replicate in itertools.product(
             graphs, spec["scenarios"], spec["budgets"], spec["methods"], range(spec["repeats"])):
-        for factor in spec["theta_factors"] if method == "CIM-RIS" else [None]:
+        for factor in spec["theta_factors"] if method in FACTOR_METHODS else [None]:
             job = {"dataset": graph["spec"]["name"], "graph": graph["spec"], "n": graph["n"],
-                   "m": graph["m"], "scenario": scenario, "k": k, "method": method,
+                   "m": graph["m"], "scenario": scenario.get("name") if isinstance(scenario, dict) else scenario,
+                   "behavior": scenario, "algorithm_options": spec["algorithm_options"],
+                   "k": k, "method": method,
                    "replicate": replicate, "theta_factor": factor,
                    "evaluation_trials": spec["evaluation_trials"], "forward_batches": spec["forward_batches"]}
             job["id"] = hashlib.sha256(json.dumps(job, sort_keys=True).encode()).hexdigest()[:20]
@@ -138,21 +143,6 @@ def prepare(config_path, output, backend, build_dir):
     return protocol
 
 
-def choose_static(graph, alpha, transfer, method, seed, k):
-    if method == "Random":
-        return random.Random(seed).sample(range(graph.n), k)
-    if method == "PageRank":
-        return pagerank_order(graph)[:k]
-    score = graph.degrees if method == "Degree" else alpha.copy()
-    if method == "1Hop":
-        for u in range(graph.n):
-            neighbors = graph.out_neighbors(u)
-            if len(neighbors):
-                # A transfer back to self is discarded on revisit.
-                score[u] += transfer[u] * float(alpha[neighbors[neighbors != u]].sum()) / len(neighbors)
-    return np.argsort(-score, kind="stable")[:k].tolist()
-
-
 def run_job(output, job_id, build_dir):
     output = Path(output).resolve()
     protocol = read(output / "protocol.json")
@@ -162,7 +152,7 @@ def run_job(output, job_id, build_dir):
     folder.mkdir(parents=True, exist_ok=True)
     started = time.perf_counter()
     graph = load_graph(job["graph"], output)
-    alpha, discard, transfer = node_probabilities(graph, job["scenario"])
+    alpha, discard, transfer = node_probabilities(graph, job.get("behavior", job["scenario"]))
     graph_load_seconds = time.perf_counter() - started
     seed, k = job["selection_seed"], job["k"]
     checkpoint = folder / "selection.json"
@@ -174,36 +164,13 @@ def run_job(output, job_id, build_dir):
         seeds, info = selected_result["seeds"], selected_result["selection"]
     else:
         selection_start = time.perf_counter()
-        info = {}
-        if job["method"] in {"CIM-RIS", "Forward-CELF"} and backend == "cpp":
+        if job["method"] in NATIVE_METHODS and backend == "cpp":
             model = native.NativeModel(graph, alpha, discard, build_dir, folder)
+        seeds, info = select(graph, alpha, discard, transfer, job["method"], k,
+                             job["theta_factor"], seed, job["forward_batches"],
+                             job["algorithm_options"], stable, model)
+        if model is not None:
             info["backend_preparation_seconds"] = model.preparation_seconds
-        if job["method"] == "CIM-RIS":
-            theta = graph.n * job["theta_factor"]
-            root_seed = stable(seed, "roots")
-            component_seeds = [stable(seed, "component", j) for j in range(k)]
-            if backend == "cpp":
-                seeds, diagnostics = model.stream(k, theta, root_seed, component_seeds)
-            else:
-                seeds, diagnostics = stream_ssr_greedy(CouponRR(graph, alpha, discard), k,
-                                                       theta, root_seed, component_seeds)
-            info.update(diagnostics)
-            info["root_seed"] = root_seed
-            info["component_seeds"] = component_seeds
-        elif job["method"] == "Forward-CELF":
-            phase = time.perf_counter()
-            bank = (model.forward_bank(job["forward_batches"], seed) if backend == "cpp" else
-                    sample_coverage(graph, alpha, discard, job["forward_batches"], seed))
-            info["sampling_seconds"] = time.perf_counter() - phase
-            phase = time.perf_counter()
-            seeds, count, evaluations = select_coverage(bank, k, mode="lazy")
-            info.update(greedy_seconds=time.perf_counter()-phase,
-                        training_estimate_not_quality=count/job["forward_batches"],
-                        marginal_recomputations=evaluations,
-                        outcome_array_bytes_not_peak_memory=sum(row.nbytes for row in bank))
-            del bank
-        else:
-            seeds = choose_static(graph, alpha, transfer, job["method"], seed, k)
         if "selection_seconds" in info:
             info["algorithm_seconds"] = info.pop("selection_seconds")
         info["selection_seconds"] = time.perf_counter() - selection_start
@@ -257,12 +224,18 @@ def publish(output, protocol):
                    selection_seconds=selection["selection_seconds"],
                    native_peak_private_bytes=selection.get("peak_private_bytes"),
                    native_peak_rss_bytes=selection.get("peak_working_set_bytes"))
+        execution_path = output / "execution" / f'{job["id"]}.json'
+        if execution_path.exists():
+            execution = read(execution_path)
+            row["sampled_process_tree_rss_bytes"] = execution.get("process_tree_peak_rss_sampled_bytes")
+        row["selection_backend"] = selection.get("selection_backend", protocol["identity"]["backend"])
         rows.append(row)
         key = (job["dataset"], job["scenario"], job["k"], job["method"], job["theta_factor"])
         groups.setdefault(key, []).append(row)
     fields = ["id", "dataset", "scenario", "k", "method", "replicate", "theta_factor", "evaluation_trials",
               "backend", "spread", "sigma_over_k", "consumed_coupons", "repeat_redemptions",
-              "within_run_ci95_halfwidth", "selection_seconds", "native_peak_private_bytes", "native_peak_rss_bytes"]
+              "within_run_ci95_halfwidth", "selection_seconds", "native_peak_private_bytes", "native_peak_rss_bytes",
+              "sampled_process_tree_rss_bytes", "selection_backend"]
     csv_write(output / "raw.csv", rows, fields)
     summaries = []
     for key, group in groups.items():

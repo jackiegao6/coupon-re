@@ -1,0 +1,35 @@
+{
+  "graphs": [
+    {
+      "format": "synthetic",
+      "name": "generated-50",
+      "n": 50
+    },
+    {
+      "format": "synthetic",
+      "name": "generated-100",
+      "n": 100
+    },
+    {
+      "format": "synthetic",
+      "name": "generated-200",
+      "n": 200
+    }
+  ],
+  "scenarios": [
+    "balanced-reference"
+  ],
+  "budgets": [
+    10
+  ],
+  "theta_factors": [
+    4
+  ],
+  "methods": [
+    "CIM-RIS"
+  ],
+  "repeats": 1,
+  "evaluation_trials": 500,
+  "forward_batches": 64,
+  "seed": 42
+}

@@ -1,0 +1,166 @@
+{
+  "graphs": [
+    {
+      "name": "generated-example",
+      "format": "synthetic",
+      "n": 12
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "t0.3-r0.2",
+      "kind": "transfer-share",
+      "transfer": 0.3,
+      "share": 0.2,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.3-r0.4",
+      "kind": "transfer-share",
+      "transfer": 0.3,
+      "share": 0.4,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.3-r0.6",
+      "kind": "transfer-share",
+      "transfer": 0.3,
+      "share": 0.6,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.3-r0.8",
+      "kind": "transfer-share",
+      "transfer": 0.3,
+      "share": 0.8,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.5-r0.2",
+      "kind": "transfer-share",
+      "transfer": 0.5,
+      "share": 0.2,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.5-r0.4",
+      "kind": "transfer-share",
+      "transfer": 0.5,
+      "share": 0.4,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.5-r0.6",
+      "kind": "transfer-share",
+      "transfer": 0.5,
+      "share": 0.6,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.5-r0.8",
+      "kind": "transfer-share",
+      "transfer": 0.5,
+      "share": 0.8,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.7-r0.2",
+      "kind": "transfer-share",
+      "transfer": 0.7,
+      "share": 0.2,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.7-r0.4",
+      "kind": "transfer-share",
+      "transfer": 0.7,
+      "share": 0.4,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.7-r0.6",
+      "kind": "transfer-share",
+      "transfer": 0.7,
+      "share": 0.6,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.7-r0.8",
+      "kind": "transfer-share",
+      "transfer": 0.7,
+      "share": 0.8,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.85-r0.2",
+      "kind": "transfer-share",
+      "transfer": 0.85,
+      "share": 0.2,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.85-r0.4",
+      "kind": "transfer-share",
+      "transfer": 0.85,
+      "share": 0.4,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.85-r0.6",
+      "kind": "transfer-share",
+      "transfer": 0.85,
+      "share": 0.6,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.85-r0.8",
+      "kind": "transfer-share",
+      "transfer": 0.85,
+      "share": 0.8,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.93-r0.2",
+      "kind": "transfer-share",
+      "transfer": 0.93,
+      "share": 0.2,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.93-r0.4",
+      "kind": "transfer-share",
+      "transfer": 0.93,
+      "share": 0.4,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.93-r0.6",
+      "kind": "transfer-share",
+      "transfer": 0.93,
+      "share": 0.6,
+      "degree_effect": 0.2
+    },
+    {
+      "name": "t0.93-r0.8",
+      "kind": "transfer-share",
+      "transfer": 0.93,
+      "share": 0.8,
+      "degree_effect": 0.2
+    }
+  ],
+  "budgets": [
+    3
+  ],
+  "theta_factors": [
+    4
+  ],
+  "methods": [
+    "CIM-RIS",
+    "Forward-CELF",
+    "Random"
+  ],
+  "repeats": 1,
+  "evaluation_trials": 500,
+  "forward_batches": 64,
+  "seed": 42
+}

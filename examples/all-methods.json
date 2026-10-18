@@ -1,0 +1,46 @@
+{
+  "graphs": [
+    {
+      "format": "synthetic",
+      "name": "generated-eight",
+      "n": 8
+    }
+  ],
+  "scenarios": [
+    "balanced-reference"
+  ],
+  "budgets": [
+    2
+  ],
+  "theta_factors": [
+    4
+  ],
+  "methods": [
+    "CIM-RIS",
+    "CIM-RIS-Bank",
+    "CIM-Conditioned",
+    "CIM-Adaptive",
+    "Forward-CELF",
+    "Forward-Stochastic",
+    "MC-Greedy",
+    "CUM-Rank",
+    "IC-RIS",
+    "Exact-Greedy",
+    "Random",
+    "Degree",
+    "PageRank",
+    "Alpha",
+    "1Hop"
+  ],
+  "repeats": 1,
+  "evaluation_trials": 500,
+  "forward_batches": 64,
+  "seed": 42,
+  "algorithm_options": {
+    "adaptive_initial_samples": 24,
+    "adaptive_minimum_samples": 48,
+    "adaptive_maximum_samples": 192,
+    "adaptive_validation_trials": 100,
+    "adaptive_tolerance_percent": 0.5
+  }
+}

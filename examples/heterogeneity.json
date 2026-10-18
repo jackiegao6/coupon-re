@@ -1,0 +1,56 @@
+{
+  "graphs": [
+    {
+      "name": "generated-example",
+      "format": "synthetic",
+      "n": 12,
+      "topology": "variable-degree",
+      "sink": false
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "degree-scale1",
+      "kind": "heterogeneity",
+      "scale": 1,
+      "association": "degree",
+      "permutation_seed": 42
+    },
+    {
+      "name": "degree-scale3",
+      "kind": "heterogeneity",
+      "scale": 3,
+      "association": "degree",
+      "permutation_seed": 42
+    },
+    {
+      "name": "permuted-scale1",
+      "kind": "heterogeneity",
+      "scale": 1,
+      "association": "permuted",
+      "permutation_seed": 42
+    },
+    {
+      "name": "permuted-scale3",
+      "kind": "heterogeneity",
+      "scale": 3,
+      "association": "permuted",
+      "permutation_seed": 42
+    }
+  ],
+  "budgets": [
+    3
+  ],
+  "theta_factors": [
+    4
+  ],
+  "methods": [
+    "CIM-RIS",
+    "Forward-CELF",
+    "Random"
+  ],
+  "repeats": 1,
+  "evaluation_trials": 500,
+  "forward_batches": 64,
+  "seed": 42
+}

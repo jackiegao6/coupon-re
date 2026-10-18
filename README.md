@@ -40,6 +40,22 @@ completed jobs and saved selection checkpoints. Graph paths are relative to the
 configuration file. Edge-list and CSR NPZ inputs are supported; benchmark
 datasets and plotting code are not included.
 
+## Full experiment suite
+
+The runnable package supports **15 methods**, uniform/full-bank/conditioned/adaptive
+sampling, parameter and budget sweeps, exact small-graph diagnosis, sampler
+ablation, and independent re-evaluation of saved seeds.
+
+```sh
+python -m couponim methods
+python -m couponim run --config examples/all-methods.json --backend cpp --workers 2 --output results/all-methods
+```
+
+See the [code and experiment catalog](docs/CATALOG.md) for every method and entry
+point, and [extended configuration](docs/EXTENDED_CONFIG.md) for parameter grids.
+`legacy/` also preserves 71 historical source files as reference snapshots;
+those path-dependent scripts are separate from the supported runnable package.
+
 ## Core code
 
 - `couponim/rr.py`, `streaming.py`: RR sampling and streaming SRR selection.

@@ -1,5 +1,6 @@
 """Portable, unweighted directed CSR graphs; no dataset-specific paths."""
 from dataclasses import dataclass
+from functools import cached_property
 from pathlib import Path
 
 import numpy as np
@@ -16,6 +17,15 @@ class Graph:
 
     def out_neighbors(self, node):
         return self.indices[self.indptr[node]:self.indptr[node + 1]]
+
+    @cached_property
+    def in_neighbors(self):
+        """Construct incoming lists only for algorithms that need them."""
+        rows = [[] for _ in range(self.n)]
+        for u in range(self.n):
+            for v in self.out_neighbors(u):
+                rows[v].append(u)
+        return rows
 
     @classmethod
     def from_csr(cls, indptr, indices, name="graph"):
@@ -82,8 +92,17 @@ def load_graph(spec, base):
         if not isinstance(n, int) or n < 4:
             raise ValueError("Synthetic smoke graph needs n >= 4")
         # Generated at runtime, not a bundled benchmark dataset.
-        rows = [sorted({(i+1) % n, (i+3) % n}) for i in range(n)]
-        rows[-1] = []
+        topology = spec.get("topology", "ring-chords")
+        if topology == "ring-chords":
+            rows = [sorted({(i+1) % n, (i+3) % n}) for i in range(n)]
+        elif topology == "variable-degree":
+            rows = [[(i+j+1) % n for j in range(1+i % min(n-1, 5))] for i in range(n)]
+        else:
+            raise ValueError("Synthetic topology must be ring-chords or variable-degree")
+        if not isinstance(spec.get("sink", True), bool):
+            raise ValueError("Synthetic sink must be a boolean")
+        if spec.get("sink", True):
+            rows[-1] = []
         return Graph.from_rows(rows, spec.get("name", "synthetic-smoke"))
     path = Path(base) / spec["path"]
     if kind == "edge-list":

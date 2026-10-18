@@ -114,6 +114,38 @@ class NativeModel:
         result["selection_seconds"] = result["selection_elapsed_seconds"]
         return result.pop("selected"), result
 
+    def bank(self, k, theta, seed):
+        """Row-major full SRR bank, bitwise selection-compatible with sample_ssr."""
+        if not 1 <= k <= self.graph.n or not 0 < theta < 2**32:
+            raise ValueError("Invalid native SRR dimensions")
+        inp, target = self.work / "bank-input.bin", self.work / "bank.json"
+        with inp.open("wb") as stream:
+            stream.write(struct.pack("<II", theta, k))
+            dump_state(stream, seed)
+        subprocess.run([str(executable(self.build_dir, "coupon_experiment")), "ssrbank",
+                        str(self.graphfile), str(inp), str(target)], check=True)
+        result = json.loads(target.read_text())
+        return result.pop("selected"), result
+
+    def extend_bank_prefix(self, theta, original_seed, selected, extra_component_seeds):
+        """Replay and verify an old row-major bank before adding coupon rounds."""
+        kmax = len(selected)+len(extra_component_seeds)
+        if (not 0 < theta < 2**32 or not 1 <= kmax <= self.graph.n
+                or len(set(selected)) != len(selected)
+                or any(not 0 <= v < self.graph.n for v in selected)):
+            raise ValueError("Invalid prefix or extension dimensions")
+        inp, target = self.work / "extend-input.bin", self.work / "extension.json"
+        with inp.open("wb") as stream:
+            stream.write(struct.pack("<III", theta, len(selected), kmax))
+            np.asarray(selected, dtype="<i4").tofile(stream)
+            dump_state(stream, original_seed)
+            for seed in extra_component_seeds:
+                dump_state(stream, seed)
+        subprocess.run([str(executable(self.build_dir, "coupon_experiment")), "extend",
+                        str(self.graphfile), str(inp), str(target)], check=True)
+        result = json.loads(target.read_text())
+        return result.pop("selected"), result
+
     def forward_bank(self, batches, seed):
         if not 0 < batches < 2**32:
             raise ValueError("Invalid forward batch count")

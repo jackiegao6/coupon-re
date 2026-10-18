@@ -4,11 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "couponim-experience"
-version = "0.1.0"
+version = "0.2.0"
 description = "Streaming reverse sampling for coupon influence maximization"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.24,<3", "psutil>=5.9,<8"]
+
+[project.optional-dependencies]
+data = ["scipy>=1.10,<2"]
 
 [project.scripts]
 couponim = "couponim.cli:main"
