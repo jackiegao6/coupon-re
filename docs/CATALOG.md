@@ -1,9 +1,8 @@
 # Code and experiment catalog
 
-The public `couponim` package is the runnable implementation. `legacy/` contains
-71 source snapshots from the earlier project for reference. These two scopes
-are deliberately documented separately: archived scripts still refer to their
-original paths/dependencies and are not standalone commands.
+The `couponim` package provides the runnable algorithms and experiment tools.
+The configurations, tests and documentation below describe the supported entry
+points and their model assumptions.
 
 ## Implementations
 
@@ -120,6 +119,5 @@ rounds are not resumable; completed selections are.
 - Numerical modifications to plotted results, forecasts, mock-result generators
   and all drawing scripts are outside this code distribution.
 
-See [source inventory](source-inventory.json) for hashes and the disposition of
-103 original source files, and [legacy notes](../legacy/README.md) before using
-historical code.
+See [extended configuration](EXTENDED_CONFIG.md) for parameter settings and
+[validation](VALIDATION.md) for completed checks.

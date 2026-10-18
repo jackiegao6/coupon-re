@@ -87,6 +87,4 @@ locally; POSIX memory handling is implemented but should be tested on its target
 
 The runnable package also includes row-major full-bank SRR, conditioned sampling,
 an empirical adaptive sampler and additional baselines. Their interfaces, RNG
-differences and model boundaries are in [CATALOG.md](CATALOG.md). Historical
-implementations in `legacy/` are reference snapshots, not part of this model
-consistency claim.
+differences and model boundaries are in [CATALOG.md](CATALOG.md).

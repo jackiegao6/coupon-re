@@ -29,12 +29,9 @@ Completed checks:
    From outside the source checkout, the installed package compiled its native
    sources, completed all 15 jobs, re-evaluated their saved seeds in parallel,
    and ran graph inspection, exact diagnosis and sampler ablation commands.
-   The wheel contains the new package modules and C++ sources; the historical
-   reference archive is not installed as executable package code.
+   The wheel contains the package modules and C++ sources.
 7. **Source-content inspection:** no concrete datasets, plotting imports,
    figure assets, compiled binaries or measured-result archives are included.
-   The 71 historical source snapshots retain original path dependencies and
-   are documented as reference-only. Their hashes are in source-inventory.json.
 
 The heterogeneity example was corrected during validation: permuting a
 sink-specific high consumption probability onto a non-sink could violate the
@@ -46,5 +43,4 @@ These checks validate implementation consistency and executable workflows.
 They do not reproduce the manuscript's large-network performance results.
 The optional SciPy MAT converter was not separately exercised; edge-list to
 CSR NPZ conversion was tested. Linux/macOS execution and the GitHub Actions
-workflow were not run locally. Historical scripts were inventoried and copied,
-not exhaustively executed.
+workflow were not run locally.

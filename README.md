@@ -53,8 +53,6 @@ python -m couponim run --config examples/all-methods.json --backend cpp --worker
 
 See the [code and experiment catalog](docs/CATALOG.md) for every method and entry
 point, and [extended configuration](docs/EXTENDED_CONFIG.md) for parameter grids.
-`legacy/` also preserves 71 historical source files as reference snapshots;
-those path-dependent scripts are separate from the supported runnable package.
 
 ## Core code
 

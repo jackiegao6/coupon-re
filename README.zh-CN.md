@@ -78,13 +78,9 @@ python -m couponim run --config examples/all-methods.json --backend cpp --worker
 
 - `couponim/`：可直接运行的算法、原生加速、参数生成、评估、诊断和调度。
 - `examples/`：预算、环境、异质性、参数网格、采样量、算法稳定性和规模实验配置。
-- `legacy/experiments/`：原实验驱动、核心实现、验证和审计源码快照。
-- `legacy/gzc-impl/`：较早的模拟、选种、概率分布和矩阵处理代码。
 - `docs/CATALOG.md`：所有功能、命令与原脚本之间的对应关系。
-- `docs/source-inventory.json`：103 份原源码的迁入／排除清单及哈希。
 
-**新实验使用 `couponim` 入口。** `legacy/` 中的 71 份文件是参考归档，保留原目录依赖，
-并不承诺直接执行；早期模型与当前模型的差别也在归档说明中列出。归档没有进入安装包。
+新实验统一使用 `couponim` 入口；各方法的模型、后端与适用范围见功能目录。
 
 新增的条件采样、自适应采样、IC-RIS 等选种仍使用 Python。指定 `--backend cpp`
 会对已有原生实现的采样和评估加速，结果中明确记录实际使用的后端。

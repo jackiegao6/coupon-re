@@ -34,8 +34,7 @@ The optional `algorithm_options` object accepts:
 The adaptive sampler appends to a shared sample prefix, doubles the target,
 reselects, and compares previous/current assignments on paired validation
 campaigns. It stops at stability after the minimum, or at the maximum.
-The former graph-derived sample-floor heuristic is retained in the historical
-driver; the portable interface makes the minimum explicit and reproducible.
+The minimum sample count is explicitly configured for reproducibility.
 Small examples override these defaults to complete quickly.
 
 `theta_factors` applies to CIM-RIS, CIM-RIS-Bank, CIM-Conditioned and IC-RIS.

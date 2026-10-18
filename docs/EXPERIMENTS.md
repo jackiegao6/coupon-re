@@ -101,6 +101,6 @@ or automatic downloads. Source-only tests generate their own small graphs.
 Reproducing a specific paper figure additionally requires the original graph,
 exact protocol, and seeds for that figure.
 
-The full method catalog, configuration examples, backend boundaries and historical
-source mapping are documented in [CATALOG.md](CATALOG.md). Custom probability
+The full method catalog, configuration examples, backend boundaries and original
+implementation mapping are documented in [CATALOG.md](CATALOG.md). Custom probability
 models and new commands are documented in [EXTENDED_CONFIG.md](EXTENDED_CONFIG.md).
